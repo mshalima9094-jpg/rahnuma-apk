@@ -15,8 +15,10 @@ window.MS_CONFIG={
 
 // ===== অ্যাপ (APK) এ গ্যালারিতে সেভ =====
 window.msNative=function(){try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()&&Capacitor.Plugins&&Capacitor.Plugins.GallerySave)}catch(e){return false}};
-window.msSave=async function(blob,name,kind,btn){const P=Capacitor.Plugins.GallerySave,t0=btn&&btn.textContent;try{if(btn){btn.disabled=true;btn.textContent='সেভ হচ্ছে…'}
-await P.begin({name:name,mime:(blob.type||'').split(';')[0]||'application/octet-stream',kind:kind});
-const CH=1572864;for(let o=0;o<blob.size;o+=CH){const u=new Uint8Array(await blob.slice(o,o+CH).arrayBuffer());let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));await P.write({data:btoa(s)})}
-await P.finish();if(btn){btn.textContent='✔ গ্যালারিতে সেভ হয়েছে';btn.disabled=false}return true}
-catch(e){try{await P.abort()}catch(_){}if(btn){btn.disabled=false;btn.textContent=t0}alert('সেভ হয়নি: '+(e&&e.message||e));return false}};
+window.MS_VER='step4';
+window.msSaveRaw=async function(blob,name,kind,btn){const P=Capacitor.Plugins.GallerySave,t0=btn&&btn.textContent;let st='শুরু';try{if(btn){btn.disabled=true;btn.textContent='সেভ হচ্ছে…'}
+st='begin';await P.begin({name:name,mime:(blob.type||'').split(';')[0]||'application/octet-stream',kind:kind});
+const CH=1572864;for(let o=0;o<blob.size;o+=CH){st='write '+Math.round(o/1048576)+'MB';const u=new Uint8Array(await blob.slice(o,o+CH).arrayBuffer());let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));await P.write({data:btoa(s)})}
+st='finish';await P.finish();if(btn){btn.textContent='✔ গ্যালারিতে সেভ হয়েছে';btn.disabled=false}return{ok:true}}
+catch(e){try{await P.abort()}catch(_){}if(btn){btn.disabled=false;btn.textContent=t0}return{ok:false,err:'['+st+'] '+(e&&e.message||e)}}};
+window.msSave=async function(blob,name,kind,btn){const r=await msSaveRaw(blob,name,kind,btn);if(!r.ok){alert('সেভ হয়নি: '+r.err);const h=document.getElementById('shh');if(h)h.textContent='সেভ হয়নি: '+r.err}return r.ok};
