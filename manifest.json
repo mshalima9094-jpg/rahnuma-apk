@@ -1,0 +1,39 @@
+{
+ "name": "স্টুডিও রাহনুমা",
+ "short_name": "স্টুডিও রাহনুমা",
+ "description": "ফটো ও ভিডিও এডিটর",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#000000",
+ "theme_color": "#075E54",
+ "lang": "bn",
+ "icons": [
+  {
+   "src": "logo-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "logo-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "logo-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "logo-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "id": "./index.html"
+}
