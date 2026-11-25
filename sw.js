@@ -1,8 +1,5 @@
-const C='ms-v22',F=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./logo-192.png','./logo-512.png','./config.js','./studio.js','./studio-dsp.js'],
-X=['https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js','https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap'];
-// নতুন ভার্সন GitHub-এ দিলে পুরনোটা যেন আর না দেখায়: অ্যাপ-ফাইল সবসময় আগে নেট থেকে আনে, নেট না থাকলে তবেই ক্যাশ
-self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(async c=>{for(const u of F){try{await c.put(u,await fetch(new Request(u,{cache:'reload'})))}catch(_){}}for(const u of X){try{await c.add(new Request(u,{mode:'cors'}))}catch(_){}}try{await c.add('./SolaimanLipi.ttf')}catch(_){}}));self.skipWaiting()});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!=C).map(n=>caches.delete(n)))).then(()=>clients.claim()))});
-self.addEventListener('fetch',e=>{const r=e.request;if(r.method!='GET')return;const u=new URL(r.url),same=u.origin==location.origin,ok=same||/(^|\.)fonts\.googleapis\.com$|(^|\.)gstatic\.com$/.test(u.host);if(!ok)return;
-if(same&&(r.mode=='navigate'||/\.(html|js|json|txt)$|\/$/.test(u.pathname))){e.respondWith(fetch(r,{cache:'no-cache'}).then(x=>{if(x&&x.status==200){const c=x.clone();caches.open(C).then(h=>h.put(r,c))}return x}).catch(()=>caches.match(r,{ignoreSearch:true}).then(h=>h||(r.mode=='navigate'?caches.match('./index.html'):Response.error()))));return}
-e.respondWith(caches.match(r,{ignoreSearch:true}).then(h=>h||fetch(r).then(x=>{if(x&&x.status==200){const c=x.clone();caches.open(C).then(h2=>h2.put(r,c))}return x}).catch(()=>r.mode=='navigate'?caches.match('./index.html'):Response.error())))});
+const CACHE='rahnuma-shell-v1';
+const SHELL=['./','./index.html','./config.js','./manifest.json','./logo-192.png','./logo-512.png','./icon-192.png','./icon-512.png'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET'||new URL(req.url).origin!==location.origin)return;event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));}return res;}).catch(()=>caches.match('./index.html'))));});
